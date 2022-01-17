@@ -1,5 +1,6 @@
 # YodaTextGeneratorWithLexicalRules
 
 Resources Used:
-- https://github.com/github/hubot-scripts/blob/master/src/scripts/yoda-quotes.coffee
-- http://people.umass.edu/kbj/homepage/Content/601_lectures.pdf
+- Yoda Quotes: https://github.com/github/hubot-scripts/blob/master/src/scripts/yoda-quotes.coffee
+- Paper on Transformational Grammer: http://people.umass.edu/kbj/homepage/Content/601_lectures.pdf
+- When to use SemiColons and Colons: https://www.usf.edu/undergrad/academic-success-center/documents/revised-semicolons-colons.pdf
