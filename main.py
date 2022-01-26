@@ -7,4 +7,8 @@ def start_up():
     print("Version for Python: " + str(sys.version))
 
 
+def test():
+    return 0
+
+
 start_up()
