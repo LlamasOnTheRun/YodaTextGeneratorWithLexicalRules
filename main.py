@@ -9,6 +9,3 @@ def start_up():
 
 def test():
     return 0
-
-
-start_up()
