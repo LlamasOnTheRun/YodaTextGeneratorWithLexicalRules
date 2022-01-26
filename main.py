@@ -1,5 +1,10 @@
-#import nltk;
+import nltk
 import sys
 
-print("Hello World!")
-print("Version for Python: " + str(sys.version))
+
+def start_up():
+    print("Hello World!")
+    print("Version for Python: " + str(sys.version))
+
+
+start_up()
