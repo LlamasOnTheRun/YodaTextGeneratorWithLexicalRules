@@ -1,6 +1,5 @@
 import unittest
 import main
-import sys
 
 
 class MyTestCase(unittest.TestCase):  # unittest.TestCase is a base class used to run tests
