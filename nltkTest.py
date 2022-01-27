@@ -1,5 +1,6 @@
 import unittest
 import nltk
+
 from nltk.tokenize import word_tokenize
 
 
@@ -13,6 +14,8 @@ class MyTestCase(unittest.TestCase):
         expected = "[('Agree', 'VB'), ('with', 'IN'), ('you', 'PRP'), (',', ','), ('the', 'DT'), ('council', 'NN'), ('does', 'VBZ'), ('.', '.'), ('Your', 'VB'), ('apprentice', 'NN'), (',', ','), ('Skywalker', 'NNP'), ('will', 'MD'), ('be', 'VB'), ('.', '.')]"
 
         self.assertEqual(expected, str(nltk_yoda_pos))
+
+
 
 
 if __name__ == '__main__':
