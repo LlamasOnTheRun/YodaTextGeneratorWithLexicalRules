@@ -1,8 +1,10 @@
 import nltk
 
 from nltk.tokenize import word_tokenize
-from nltk import CFG, Production, nonterminals
+from nltk import CFG, Production, nonterminals, Nonterminal
 from nltk.parse.generate import generate
+from nltk.help import upenn_tagset
+from collections import OrderedDict
 
 quotes = [
     "Agree with you, the council does. Your apprentice, Skywalker will be.",
@@ -30,39 +32,59 @@ quotes = [
     "No. There is... another... Sky... walker..."
 ]
 
+
+nonTerminalsInSentence = []
+productions = [] #change back to set
+
 print()
 for sentence in quotes:
     print(sentence)
-    for word_and_tag in nltk.pos_tag(word_tokenize(sentence)):
-        print(word_and_tag[1], end=" ")
+    for word_and_pos in nltk.pos_tag(word_tokenize(sentence)):  # POS -> Part Of Speech
+        nonTerminalsInSentence.append(Nonterminal(word_and_pos[1]))
+    print("All terminals found: " + nonTerminalsInSentence.__str__())
+    index = len(nonTerminalsInSentence)-1
+    while index > 1:
+        production = Production("Apples", [nonTerminalsInSentence[index-1], nonTerminalsInSentence[index]])
+        productions.append(production)
+        index -= 2
+        if index == 1:
+            productions.append(Production("Apples", [nonTerminalsInSentence[index - 1], production]))
+
+    res = list(OrderedDict.fromkeys(productions))
+    print("All initial productions found: " + res.__str__())
+    # oset = dict.fromkeys(a).keys()
+    productions.clear()
+
+    nonTerminalsInSentence.clear()
     print()
-    print()
 
-grammar = CFG.fromstring("""
-S -> RTO SHR
-RTO -> DIR SUM
-DIR -> vb in
-SUM -> dt MWSO
-MWSO -> nnp nnp
-SHR -> DSO GDA
-DSO -> jj nnp
-GDA -> vbz vbn
-vb -> 'twisted'
-in -> 'by'
-dt -> 'the'
-nnp -> 'dark' | 'side' | 'skywalker'
-jj -> 'young'
-vbz -> 'has'
-vbn -> 'become'
-""")
 
-print("A Grammar:", repr(grammar))
-print("    grammar.start()       =>", repr(grammar.start()))
-print("    grammar.productions() =>", end=" ")
-# Use string.replace(...) is to line-wrap the output.
-print(repr(grammar.productions()).replace(",", ",\n" + " " * 25))
-print()
 
-print(list(generate(grammar)))
-
-#nltk.parse_cfg("Twisted by the Dark Side young Skywalker has become")
+# grammar = CFG.fromstring("""
+# S -> RTO SHR
+# RTO -> DIR SUM
+# DIR -> vb in
+# SUM -> dt MWSO
+# MWSO -> nnp nnp
+# SHR -> DSO GDA
+# DSO -> jj nnp
+# GDA -> vbz vbn
+# vb -> 'twisted'
+# in -> 'by'
+# dt -> 'the'
+# nnp -> 'dark' | 'side' | 'skywalker'
+# jj -> 'young'
+# vbz -> 'has'
+# vbn -> 'become'
+# """)
+#
+# print("A Grammar:", repr(grammar))
+# print("    grammar.start()       =>", repr(grammar.start()))
+# print("    grammar.productions() =>", end=" ")
+# # Use string.replace(...) is to line-wrap the output.
+# print(repr(grammar.productions()).replace(",", ",\n" + " " * 25))
+# print()
+#
+# print(list(generate(grammar)))
+#
+# #nltk.parse_cfg("Twisted by the Dark Side young Skywalker has become")

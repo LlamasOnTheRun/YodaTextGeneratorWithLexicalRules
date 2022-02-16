@@ -6,3 +6,4 @@ Resources Used:
 - When to use SemiColons and Colons: https://www.usf.edu/undergrad/academic-success-center/documents/revised-semicolons-colons.pdf
 - Intro to "Tagging": https://realpython.com/nltk-nlp-python/
 - nltk code documentation for cfg https://www.nltk.org/_modules/nltk/grammar.html
+- Parsing Technique: https://people.cs.umass.edu/~mccallum/courses/inlp2007/lect5-cfg.pdf
