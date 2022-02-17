@@ -41,6 +41,7 @@ def mutateListWithAlreadyDeclaredProductions(initalNonTerminals):
                     initalNonTerminals.insert(index-1, production.lhs())
                     index = len(initalNonTerminals)
                     print("After mutation: " + initalNonTerminals.__str__())
+            #todo add another for loop here to check now for S productions
             index = index - 1
 
     return initalNonTerminals
