@@ -31,17 +31,24 @@ quotes = [
     "When nine hundred years old you reach, look as good, you will not.",
     "No. There is... another... Sky... walker..."
 ]
-
 posInSentence = []
 startingProduction = Production(Nonterminal("S"), [])
 overallProductionsFound = []
 
+
+def getPOSOfSentence(sentence):
+    print(sentence)
+    temp = []
+    for word_and_pos in nltk.pos_tag(word_tokenize(sentence)):  # POS -> Part Of Speech
+        temp.append(Nonterminal(word_and_pos[1]))
+
+    print("All POS found in sentence: " + temp.__str__())
+    return temp
+
+
 print()
 for sentence in quotes:
-    print(sentence)
-    for word_and_pos in nltk.pos_tag(word_tokenize(sentence)):  # POS -> Part Of Speech
-        posInSentence.append(Nonterminal(word_and_pos[1]))
-    print("All terminals found: " + posInSentence.__str__())
+    posInSentence = getPOSOfSentence(sentence)
     index = len(posInSentence) - 1
     while index > 1:
         production = Production("Apples", [posInSentence[index - 1], posInSentence[index]])
@@ -57,8 +64,6 @@ for sentence in quotes:
 
     posInSentence.clear()
     print()
-
-
 
 # grammar = CFG.fromstring("""
 # S -> RTO SHR
