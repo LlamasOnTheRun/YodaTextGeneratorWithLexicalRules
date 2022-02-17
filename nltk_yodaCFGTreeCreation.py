@@ -17,7 +17,7 @@ def getPOSOfSentence(sentence):
     return temp
 
 
-def mutateListWithAlreadyDeclaredNonTerminals(initalNonTerminals):
+def mutateListWithAlreadyDeclaredProductions(initalNonTerminals):
     global overallProductionsFound
     global startingProduction
 
@@ -123,8 +123,7 @@ rollingID = 0
 print()
 for sentence in quotes:
     posInSentence = getPOSOfSentence(sentence)
-    unfoundProductionsForNonTerminals = mutateListWithAlreadyDeclaredNonTerminals(posInSentence)
-    # todo add step here for identifying exsiting productions spotted using inital POS
+    unfoundProductionsForNonTerminals = mutateListWithAlreadyDeclaredProductions(posInSentence)
     performRightToLeftProductionCreation(unfoundProductionsForNonTerminals)
     posInSentence.clear()
     print()
