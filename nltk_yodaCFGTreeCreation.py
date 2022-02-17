@@ -21,9 +21,21 @@ def mutateListWithAlreadyDeclaredNonTerminals(initalNonTerminals):
     global overallProductionsFound
     global startingProduction
     unfoundNonTerminsals = []
+
     if overallProductionsFound.__len__() != 0:
-        unfoundNonTerminsals = initalNonTerminals
-    return unfoundNonTerminsals
+        index = len(initalNonTerminals) - 1
+        while index > 0:
+            lhs = initalNonTerminals.__getitem__(index - 1)
+            rhs = initalNonTerminals.__getitem__(index)
+            print("What we are finding: " + (lhs, rhs).__str__())
+
+            for production in overallProductionsFound:
+                print("Production we are checking: " + production.lhs().__str__() + " -> " + production.rhs().__str__())
+                if production.rhs().__eq__((lhs, rhs)):
+                    print("Found a match!!!!")
+            index = 0
+
+    return initalNonTerminals
 
 def performRightToLeftProductionCreation(unfoundNonTerminals):
     global rollingID
@@ -102,8 +114,8 @@ rollingID = 0
 print()
 for sentence in quotes:
     posInSentence = getPOSOfSentence(sentence)
-    unfoundProductionsForNonTerminals = posInSentence
-    #unfoundProductionsForNonTerminals = mutateListWithAlreadyDeclaredNonTerminals(posInSentence)
+    #unfoundProductionsForNonTerminals = posInSentence
+    unfoundProductionsForNonTerminals = mutateListWithAlreadyDeclaredNonTerminals(posInSentence)
     # todo add step here for identifying exsiting productions spotted using inital POS
     performRightToLeftProductionCreation(unfoundProductionsForNonTerminals)
 
