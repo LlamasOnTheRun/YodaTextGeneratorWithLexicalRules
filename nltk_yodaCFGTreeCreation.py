@@ -31,9 +31,6 @@ quotes = [
     "When nine hundred years old you reach, look as good, you will not.",
     "No. There is... another... Sky... walker..."
 ]
-posInSentence = []
-startingProduction = Production(Nonterminal("S"), [])
-overallProductionsFound = []
 
 
 def getPOSOfSentence(sentence):
@@ -46,22 +43,39 @@ def getPOSOfSentence(sentence):
     return temp
 
 
+def performRightToLeftProductionCreation(unfoundNonTerminals):
+    global rollingID
+    global overallProductionsFound
+    index = len(unfoundNonTerminals) - 1
+    while index > 1:
+        rhs = unfoundNonTerminals.__getitem__(index)
+        lhs = unfoundNonTerminals.__getitem__(index - 1)
+        production = Production(Nonterminal(rollingID.__str__()), [lhs, rhs])
+        rollingID = rollingID + 1
+        overallProductionsFound.insert(0, production)
+        index -= 2
+        if index == 0:
+            lhs = unfoundNonTerminals.__getitem__(index)
+            overallProductionsFound.insert(0, Production(Nonterminal(rollingID.__str__()), [lhs, production.lhs()]))
+            rollingID = rollingID + 1
+
+    res = list(OrderedDict.fromkeys(overallProductionsFound))
+    print("All initial productions found: " + overallProductionsFound.__str__())
+
+
+posInSentence = []
+startingProduction = Production(Nonterminal("S"), [])
+overallProductionsFound = []
+rollingID = 0
+
 print()
 for sentence in quotes:
     posInSentence = getPOSOfSentence(sentence)
-    index = len(posInSentence) - 1
-    while index > 1:
-        production = Production("Apples", [posInSentence[index - 1], posInSentence[index]])
-        overallProductionsFound.append(production)
-        index -= 2
-        if index == 1:
-            overallProductionsFound.append(Production("Apples", [posInSentence[index - 1], production]))
+    unfoundProductionsForNonTerminals = posInSentence
+    # todo add step here for identifying exsiting productions spotted using inital POS
+    performRightToLeftProductionCreation(unfoundProductionsForNonTerminals)
 
-    res = list(OrderedDict.fromkeys(overallProductionsFound))
-    print("All initial productions found: " + res.__str__())
-    # oset = dict.fromkeys(a).keys()
     overallProductionsFound.clear()
-
     posInSentence.clear()
     print()
 
