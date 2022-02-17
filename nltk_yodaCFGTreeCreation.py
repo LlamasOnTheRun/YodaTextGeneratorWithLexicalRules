@@ -46,25 +46,50 @@ def getPOSOfSentence(sentence):
 def performRightToLeftProductionCreation(unfoundNonTerminals):
     global rollingID
     global overallProductionsFound
+    global startingProduction
     index = len(unfoundNonTerminals) - 1
+    newNonTerminals = []
+    print("Displaying unfound nonterminals. On index " + index.__str__() + ": " + unfoundNonTerminals.__str__())
+    print("Displaying newly created nonterminals: " + newNonTerminals.__str__())
     while index > 1:
-        rhs = unfoundNonTerminals.__getitem__(index)
         lhs = unfoundNonTerminals.__getitem__(index - 1)
+        rhs = unfoundNonTerminals.__getitem__(index)
         production = Production(Nonterminal(rollingID.__str__()), [lhs, rhs])
         rollingID = rollingID + 1
+
         overallProductionsFound.insert(0, production)
+
+        unfoundNonTerminals.pop(index)
+        unfoundNonTerminals.pop(index-1)
+        newNonTerminals.insert(0, production.lhs())
+
+        print("Displaying unfound nonterminals. On index " + index.__str__() + ": " + unfoundNonTerminals.__str__())
+        print("Displaying newly created nonterminals: " + newNonTerminals.__str__())
         index -= 2
         if index == 0:
             lhs = unfoundNonTerminals.__getitem__(index)
-            overallProductionsFound.insert(0, Production(Nonterminal(rollingID.__str__()), [lhs, production.lhs()]))
-            rollingID = rollingID + 1
+            production = Production(Nonterminal(rollingID.__str__()), [lhs, production.lhs()])
+            overallProductionsFound.insert(0, production)
+            unfoundNonTerminals.pop(index)
 
-    res = list(OrderedDict.fromkeys(overallProductionsFound))
-    print("All initial productions found: " + overallProductionsFound.__str__())
+            newNonTerminals.pop(index)
+            newNonTerminals.insert(0, production.lhs())
+            rollingID = rollingID + 1
+            print("Displaying unfound nonterminals. On index " + index.__str__() + ": " + unfoundNonTerminals.__str__())
+            print("Displaying newly created nonterminals: " + newNonTerminals.__str__())
+
+
+    print("Overall productions found thus far: " + overallProductionsFound.__str__())
+    print("Displaying newly created nonterminals: " + newNonTerminals.__str__() + "\n")
+    if newNonTerminals.__len__() > 1: # means I havent found an S canidate
+        performRightToLeftProductionCreation(newNonTerminals)
+    else:
+        startingProduction.append(newNonTerminals.pop())
+        print(startingProduction)
 
 
 posInSentence = []
-startingProduction = Production(Nonterminal("S"), [])
+startingProduction = []
 overallProductionsFound = []
 rollingID = 0
 
