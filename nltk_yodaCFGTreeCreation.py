@@ -82,8 +82,6 @@ def performRightToLeftProductionCreation(unfoundNonTerminals):
             print("Displaying unfound nonterminals. On index " + index.__str__() + ": " + unfoundNonTerminals.__str__())
             print("Displaying newly created nonterminals: " + newNonTerminals.__str__())
 
-
-    print("Overall productions found thus far: " + overallProductionsFound.__str__())
     print("Displaying newly created nonterminals: " + newNonTerminals.__str__() + "\n")
     if newNonTerminals.__len__() > 1: # means I havent found an S canidate
         performRightToLeftProductionCreation(newNonTerminals)
@@ -108,6 +106,8 @@ quotes = [
     "Not if anything to say about it I have.",
     "Great warrior, hmm? Wars not make one great.",
     "Do or do not; there is no try.",
+    #"Do or do not; there is no try.", # todo intorducing duplicate to see what happens. This breaks it!
+    "Do or do not; there is no try. AKA get it done!",  # todo intorducing a run on part
     "Size matters not. Look at me. Judge me by my size, do you?",
     "That is why you fail.",
     "No! No different. Only different in your mind. You must unlearn what you have learned.",
@@ -128,3 +128,4 @@ for sentence in quotes:
     performRightToLeftProductionCreation(unfoundProductionsForNonTerminals)
     posInSentence.clear()
     print()
+    print("Overall productions found thus far: " + overallProductionsFound.__str__())
