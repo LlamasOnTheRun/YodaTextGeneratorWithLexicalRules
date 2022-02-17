@@ -123,11 +123,8 @@ rollingID = 0
 print()
 for sentence in quotes:
     posInSentence = getPOSOfSentence(sentence)
-    #unfoundProductionsForNonTerminals = posInSentence
     unfoundProductionsForNonTerminals = mutateListWithAlreadyDeclaredNonTerminals(posInSentence)
     # todo add step here for identifying exsiting productions spotted using inital POS
     performRightToLeftProductionCreation(unfoundProductionsForNonTerminals)
-
-    #overallProductionsFound.clear()
     posInSentence.clear()
     print()
