@@ -20,20 +20,28 @@ def getPOSOfSentence(sentence):
 def mutateListWithAlreadyDeclaredNonTerminals(initalNonTerminals):
     global overallProductionsFound
     global startingProduction
-    unfoundNonTerminsals = []
+
+    print("-------Starting mutation procedure-------")
 
     if overallProductionsFound.__len__() != 0:
         index = len(initalNonTerminals) - 1
         while index > 0:
             lhs = initalNonTerminals.__getitem__(index - 1)
             rhs = initalNonTerminals.__getitem__(index)
-            print("What we are finding: " + (lhs, rhs).__str__())
 
             for production in overallProductionsFound:
-                print("Production we are checking: " + production.lhs().__str__() + " -> " + production.rhs().__str__())
                 if production.rhs().__eq__((lhs, rhs)):
                     print("Found a match!!!!")
-            index = 0
+                    print("Index we are on: " + index.__str__())
+                    print("What we are finding from sentence: " + (lhs, rhs).__str__())
+                    print("Existing Production we are checking: " + production.__str__())
+                    print("Before mutation: " + initalNonTerminals.__str__())
+                    initalNonTerminals.pop(index)
+                    initalNonTerminals.pop(index - 1)
+                    initalNonTerminals.insert(index-1, production.lhs())
+                    index = len(initalNonTerminals)
+                    print("After mutation: " + initalNonTerminals.__str__())
+            index = index - 1
 
     return initalNonTerminals
 
@@ -43,6 +51,7 @@ def performRightToLeftProductionCreation(unfoundNonTerminals):
     global startingProduction
     index = len(unfoundNonTerminals) - 1
     newNonTerminals = []
+    print("-------Starting Left to Right procedure-------")
     print("Displaying unfound nonterminals. On index " + index.__str__() + ": " + unfoundNonTerminals.__str__())
     print("Displaying newly created nonterminals: " + newNonTerminals.__str__())
     while index > 0:
