@@ -131,32 +131,3 @@ for sentence in quotes:
     #overallProductionsFound.clear()
     posInSentence.clear()
     print()
-
-# grammar = CFG.fromstring("""
-# S -> RTO SHR
-# RTO -> DIR SUM
-# DIR -> vb in
-# SUM -> dt MWSO
-# MWSO -> nnp nnp
-# SHR -> DSO GDA
-# DSO -> jj nnp
-# GDA -> vbz vbn
-# vb -> 'twisted'
-# in -> 'by'
-# dt -> 'the'
-# nnp -> 'dark' | 'side' | 'skywalker'
-# jj -> 'young'
-# vbz -> 'has'
-# vbn -> 'become'
-# """)
-#
-# print("A Grammar:", repr(grammar))
-# print("    grammar.start()       =>", repr(grammar.start()))
-# print("    grammar.productions() =>", end=" ")
-# # Use string.replace(...) is to line-wrap the output.
-# print(repr(grammar.productions()).replace(",", ",\n" + " " * 25))
-# print()
-#
-# print(list(generate(grammar)))
-#
-# #nltk.parse_cfg("Twisted by the Dark Side young Skywalker has become")
