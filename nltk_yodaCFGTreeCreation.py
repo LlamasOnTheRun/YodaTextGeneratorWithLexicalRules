@@ -89,7 +89,7 @@ def performRightToLeftProductionCreation(unfoundNonTerminals):
         startingProduction.append(newNonTerminals.pop())
         print(startingProduction)
 
-quotes = [
+quotes = [ # todo will need to seperate these quotes into their own sentences. Some have two or three combined
     "Agree with you, the council does. Your apprentice, Skywalker will be.",
     "Always two there are, no more, no less: a master and an apprentice.",
     "Fear is the path to the Dark Side. Fear leads to anger, anger leads to hate; hate leads to suffering. I sense much fear in you.",
@@ -105,6 +105,7 @@ quotes = [
     "If into the security recordings you go, only pain will you find.",
     "Not if anything to say about it I have.",
     "Great warrior, hmm? Wars not make one great.",
+    "Great warrior, hmm?", # todo intorducing subset of data
     "Do or do not; there is no try.",
     #"Do or do not; there is no try.", # todo intorducing duplicate to see what happens. This breaks it!
     "Do or do not; there is no try. AKA get it done!",  # todo intorducing a run on part
