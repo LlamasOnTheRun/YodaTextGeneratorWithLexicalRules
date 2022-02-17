@@ -32,30 +32,30 @@ quotes = [
     "No. There is... another... Sky... walker..."
 ]
 
-
-nonTerminalsInSentence = []
-productions = [] #change back to set
+posInSentence = []
+startingProduction = Production(Nonterminal("S"), [])
+overallProductionsFound = []
 
 print()
 for sentence in quotes:
     print(sentence)
     for word_and_pos in nltk.pos_tag(word_tokenize(sentence)):  # POS -> Part Of Speech
-        nonTerminalsInSentence.append(Nonterminal(word_and_pos[1]))
-    print("All terminals found: " + nonTerminalsInSentence.__str__())
-    index = len(nonTerminalsInSentence)-1
+        posInSentence.append(Nonterminal(word_and_pos[1]))
+    print("All terminals found: " + posInSentence.__str__())
+    index = len(posInSentence) - 1
     while index > 1:
-        production = Production("Apples", [nonTerminalsInSentence[index-1], nonTerminalsInSentence[index]])
-        productions.append(production)
+        production = Production("Apples", [posInSentence[index - 1], posInSentence[index]])
+        overallProductionsFound.append(production)
         index -= 2
         if index == 1:
-            productions.append(Production("Apples", [nonTerminalsInSentence[index - 1], production]))
+            overallProductionsFound.append(Production("Apples", [posInSentence[index - 1], production]))
 
-    res = list(OrderedDict.fromkeys(productions))
+    res = list(OrderedDict.fromkeys(overallProductionsFound))
     print("All initial productions found: " + res.__str__())
     # oset = dict.fromkeys(a).keys()
-    productions.clear()
+    overallProductionsFound.clear()
 
-    nonTerminalsInSentence.clear()
+    posInSentence.clear()
     print()
 
 
