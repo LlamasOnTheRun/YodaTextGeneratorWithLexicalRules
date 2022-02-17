@@ -51,7 +51,7 @@ def performRightToLeftProductionCreation(unfoundNonTerminals):
     newNonTerminals = []
     print("Displaying unfound nonterminals. On index " + index.__str__() + ": " + unfoundNonTerminals.__str__())
     print("Displaying newly created nonterminals: " + newNonTerminals.__str__())
-    while index > 1:
+    while index > 0:
         lhs = unfoundNonTerminals.__getitem__(index - 1)
         rhs = unfoundNonTerminals.__getitem__(index)
         production = Production(Nonterminal(rollingID.__str__()), [lhs, rhs])
