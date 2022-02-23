@@ -22,9 +22,11 @@ def mutateListWithAlreadyDeclaredProductions(initalNonTerminals):
     global overallStartingNonTerminals
 
     print("-------Starting mutation procedure-------")
+    foundExistingProduction = False
 
-    if overallProductionsFound.__len__() != 0:
+    if overallProductionsFound.__len__() != 0:  # [0, 2, 1] index = -1
         index = len(initalNonTerminals) - 1
+        print("Starting index: " + index.__str__())
         while index > 0:
             lhs = initalNonTerminals.__getitem__(index - 1)
             rhs = initalNonTerminals.__getitem__(index)
@@ -39,19 +41,29 @@ def mutateListWithAlreadyDeclaredProductions(initalNonTerminals):
                     initalNonTerminals.pop(index)
                     initalNonTerminals.pop(index - 1)
                     initalNonTerminals.insert(index-1, production.lhs())
-                    index = len(initalNonTerminals)
+                    foundExistingProduction = True
                     print("After mutation: " + initalNonTerminals.__str__())
-            index = index - 1
+                    break
+            index -= 2
+            if index == 0:
+                lhs = initalNonTerminals.__getitem__(index)
+                rhs = initalNonTerminals.__getitem__(index+1)
+                for production in overallProductionsFound:
+                    if production.rhs().__eq__((lhs, rhs)):
+                        print("Found a match for production!!!!")
+                        print("Index we are on: " + index.__str__())
+                        print("What we are finding from sentence: " + (lhs, rhs).__str__())
+                        print("Existing Production we are checking: " + production.__str__())
+                        print("Before mutation: " + initalNonTerminals.__str__())
+                        initalNonTerminals.pop(0)
+                        initalNonTerminals.pop(0)
+                        initalNonTerminals.insert(0, production.lhs())
+                        foundExistingProduction = True
+                        print("After mutation: " + initalNonTerminals.__str__())
+                        break
 
-    # for startingNonTerminal in overallStartingNonTerminals: # A -> generator -> B then i need B -> parser -> A
-    #     for foundNonTerminal in initalNonTerminals: # todo this was my orginal way to find S, but i plan on moving this to a seperate method later on
-    #         if startingNonTerminal.__eq__(foundNonTerminal):
-    #             print("Found a match for starting production "+foundNonTerminal.__str__()+"!!!!")
-    #             if initalNonTerminals.__len__() == 1:
-    #                 print("We matched up with a expected starting non-terminal. Look for Production " + initalNonTerminals.__str__())
-    #                 initalNonTerminals.remove(foundNonTerminal)
-    #             else:
-    #                 print("We found a new starting symbol. Look for Production " + initalNonTerminals.__str__())
+    if (foundExistingProduction == True):
+        mutateListWithAlreadyDeclaredProductions(initalNonTerminals)
 
     return initalNonTerminals
 
@@ -99,8 +111,8 @@ def performRightToLeftProductionCreation(unfoundNonTerminals):
         print(overallStartingNonTerminals)
 
 quotes = [
-    "Yes, No different I.",
     "No different I.",
+    "Yes, No different I.",
     "Agree with you, the council does.",
     "Your apprentice, Skywalker will be.",
     "Always two there are, no more, no less: a master and an apprentice.",
