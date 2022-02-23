@@ -19,7 +19,7 @@ def getPOSOfSentence(sentence):
 
 def mutateListWithAlreadyDeclaredProductions(initalNonTerminals):
     global overallProductionsFound
-    global startingProduction
+    global overallStartingNonTerminals
 
     print("-------Starting mutation procedure-------")
 
@@ -31,7 +31,7 @@ def mutateListWithAlreadyDeclaredProductions(initalNonTerminals):
 
             for production in overallProductionsFound:
                 if production.rhs().__eq__((lhs, rhs)):
-                    print("Found a match!!!!")
+                    print("Found a match for production!!!!")
                     print("Index we are on: " + index.__str__())
                     print("What we are finding from sentence: " + (lhs, rhs).__str__())
                     print("Existing Production we are checking: " + production.__str__())
@@ -41,15 +41,24 @@ def mutateListWithAlreadyDeclaredProductions(initalNonTerminals):
                     initalNonTerminals.insert(index-1, production.lhs())
                     index = len(initalNonTerminals)
                     print("After mutation: " + initalNonTerminals.__str__())
-            #todo add another for loop here to check now for S productions
             index = index - 1
+
+    # for startingNonTerminal in overallStartingNonTerminals: # A -> generator -> B then i need B -> parser -> A
+    #     for foundNonTerminal in initalNonTerminals: # todo this was my orginal way to find S, but i plan on moving this to a seperate method later on
+    #         if startingNonTerminal.__eq__(foundNonTerminal):
+    #             print("Found a match for starting production "+foundNonTerminal.__str__()+"!!!!")
+    #             if initalNonTerminals.__len__() == 1:
+    #                 print("We matched up with a expected starting non-terminal. Look for Production " + initalNonTerminals.__str__())
+    #                 initalNonTerminals.remove(foundNonTerminal)
+    #             else:
+    #                 print("We found a new starting symbol. Look for Production " + initalNonTerminals.__str__())
 
     return initalNonTerminals
 
 def performRightToLeftProductionCreation(unfoundNonTerminals):
     global rollingID
     global overallProductionsFound
-    global startingProduction
+    global overallStartingNonTerminals
     index = len(unfoundNonTerminals) - 1
     newNonTerminals = []
     print("-------Starting Left to Right procedure-------")
@@ -85,40 +94,55 @@ def performRightToLeftProductionCreation(unfoundNonTerminals):
     print("Displaying newly created nonterminals: " + newNonTerminals.__str__() + "\n")
     if newNonTerminals.__len__() > 1: # means I havent found an S canidate
         performRightToLeftProductionCreation(newNonTerminals)
-    else:
-        startingProduction.append(newNonTerminals.pop())
-        print(startingProduction)
+    elif newNonTerminals.__len__() != 0:
+        overallStartingNonTerminals.append(newNonTerminals.pop()) # todo make it return "S" on "overallProductionsFound" instead of number
+        print(overallStartingNonTerminals)
 
-quotes = [ # todo will need to seperate these quotes into their own sentences. Some have two or three combined
-    "Agree with you, the council does. Your apprentice, Skywalker will be.",
+quotes = [
+    "Yes, No different I.",
+    "No different I.",
+    "Agree with you, the council does.",
+    "Your apprentice, Skywalker will be.",
     "Always two there are, no more, no less: a master and an apprentice.",
-    "Fear is the path to the Dark Side. Fear leads to anger, anger leads to hate; hate leads to suffering. I sense much fear in you.",
+    "Fear is the path to the Dark Side.",
+    "Fear leads to anger, anger leads to hate; hate leads to suffering.",
+    "I sense much fear in you.",
     "Qui-Gon's defiance I sense in you.",
     "Truly wonderful the mind of a child is.",
     "Around the survivors a perimeter create.",
-    "Lost a planet Master Obi-Wan has. How embarrassing. how embarrassing.",
-    "Victory, you say? Master Obi-Wan, not victory. The shroud of the Dark Side has fallen. Begun the Clone War has.",
-    "Much to learn you still have...my old padawan... This is just the beginning!",
+    "Lost a planet Master Obi-Wan has.",
+    "How embarrassing...How embarrassing.",
+    "Victory, you say?",
+    "Master Obi-Wan, not victory.",
+    "The shroud of the Dark Side has fallen.",
+    "Begun the Clone War has.",
+    "Much to learn you still have... my old padawan... this is just the beginning!",
     "Twisted by the Dark Side young Skywalker has become.",
     "The boy you trained, gone he is, consumed by Darth Vader.",
     "The fear of loss is a path to the Dark Side.",
     "If into the security recordings you go, only pain will you find.",
     "Not if anything to say about it I have.",
-    "Great warrior, hmm? Wars not make one great.",
-    "Great warrior, hmm?", # todo intorducing subset of data
+    "Great warrior, hmm?",
+    "Wars not make one great.",
     "Do or do not; there is no try.",
-    #"Do or do not; there is no try.", # todo intorducing duplicate to see what happens. This breaks it!
-    "Do or do not; there is no try. AKA get it done!",  # todo intorducing a run on part
-    "Size matters not. Look at me. Judge me by my size, do you?",
+    "Size matters not.",
+    "Look at me.",
+    "Judge me by my size, do you?",
     "That is why you fail.",
-    "No! No different. Only different in your mind. You must unlearn what you have learned.",
+    "No!",
+    "No similar.",
+    "You must unlearn what you have learned.",
+    "Only different in your mind.",
     "Always in motion the future is.",
-    "Reckless he is. Matters are worse.",
+    "Reckless he is.",
+    "Matters are worse.",
     "When nine hundred years old you reach, look as good, you will not.",
-    "No. There is... another... Sky... walker..."
+    "No.",
+    "There is... another... Sky... walker..."
 ]
+
 posInSentence = []
-startingProduction = []
+overallStartingNonTerminals = []
 overallProductionsFound = []
 rollingID = 0
 
@@ -126,6 +150,7 @@ print()
 for sentence in quotes:
     posInSentence = getPOSOfSentence(sentence)
     unfoundProductionsForNonTerminals = mutateListWithAlreadyDeclaredProductions(posInSentence)
+    # todo add method here to check if an S was found and unfoundProductionsForNonTerminals == length of 1. If a S was found and unfoundProductionsForNonTerminals != length of 1, there is a new S
     performRightToLeftProductionCreation(unfoundProductionsForNonTerminals)
     posInSentence.clear()
     print()
