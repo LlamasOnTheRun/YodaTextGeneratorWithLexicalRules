@@ -16,6 +16,18 @@ def getPOSOfSentence(sentence):
     print("All POS found in sentence: " + temp.__str__())
     return temp
 
+def determineIfNewStartingProductionIsFound(mutatedNonTerminals):
+    print("Here are the nonterminals found after mutation")
+    print(mutatedNonTerminals)
+    isThereANewStart = False
+
+    if len(mutatedNonTerminals) > 1:
+        for mutatedNonTerminal in mutatedNonTerminals:
+            for startingNonTerminal in overallStartingNonTerminals:
+                if mutatedNonTerminal == startingNonTerminal:
+                    isThereANewStart = True
+
+    return isThereANewStart
 
 def mutateListWithAlreadyDeclaredProductions(initalNonTerminals):
     global overallProductionsFound
@@ -67,10 +79,12 @@ def mutateListWithAlreadyDeclaredProductions(initalNonTerminals):
 
     return initalNonTerminals
 
-def performRightToLeftProductionCreation(unfoundNonTerminals):
+def performRightToLeftProductionCreation(unfoundNonTerminals, newStartDetected):
     global rollingID
     global overallProductionsFound
     global overallStartingNonTerminals
+
+    print(newStartDetected)
     index = len(unfoundNonTerminals) - 1
     newNonTerminals = []
     print("-------Starting Left to Right procedure-------")
@@ -105,9 +119,14 @@ def performRightToLeftProductionCreation(unfoundNonTerminals):
 
     print("Displaying newly created nonterminals: " + newNonTerminals.__str__() + "\n")
     if newNonTerminals.__len__() > 1: # means I havent found an S canidate
-        performRightToLeftProductionCreation(newNonTerminals)
+        performRightToLeftProductionCreation(newNonTerminals, newStartDetected)
     elif newNonTerminals.__len__() != 0:
+        if newStartDetected:
+            print("Since we found a new starting nonterminal, we will need to create a new starting one")
+            overallStartingNonTerminals.clear()
+
         overallStartingNonTerminals.append(newNonTerminals.pop()) # todo make it return "S" on "overallProductionsFound" instead of number
+        print("Our new starting nonterminals")
         print(overallStartingNonTerminals)
 
 quotes = [
@@ -162,8 +181,26 @@ print()
 for sentence in quotes:
     posInSentence = getPOSOfSentence(sentence)
     unfoundProductionsForNonTerminals = mutateListWithAlreadyDeclaredProductions(posInSentence)
+    newStartDetected = determineIfNewStartingProductionIsFound(unfoundProductionsForNonTerminals)
     # todo add method here to check if an S was found and unfoundProductionsForNonTerminals == length of 1. If a S was found and unfoundProductionsForNonTerminals != length of 1, there is a new S
-    performRightToLeftProductionCreation(unfoundProductionsForNonTerminals)
+    performRightToLeftProductionCreation(unfoundProductionsForNonTerminals, newStartDetected)
+
     posInSentence.clear()
     print()
     print("Overall productions found thus far: " + overallProductionsFound.__str__())
+
+print("We made our tree, lets see if this is in chomsky normal form")
+
+for production in overallProductionsFound:
+    for startingNonTerminal in overallStartingNonTerminals:
+        if(production.lhs() == startingNonTerminal):
+            overallProductionsFound.append(Production(Nonterminal("S"), production.rhs()))
+            overallProductionsFound.remove(production)
+
+print("New productions found after adding S: " + overallProductionsFound.__str__())
+
+customCFG = CFG(Nonterminal("S"), overallProductionsFound)
+
+print("Is this in chomsky normal form: ")
+print(customCFG.is_chomsky_normal_form())
+print("That is what we like to see")
