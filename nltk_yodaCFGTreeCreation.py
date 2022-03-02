@@ -8,10 +8,12 @@ from collections import OrderedDict
 
 
 def getPOSOfSentence(sentence):
+    global overallProductionsFound
     print(sentence)
     temp = []
     for word_and_pos in nltk.pos_tag(word_tokenize(sentence)):  # POS -> Part Of Speech
         temp.append(Nonterminal(word_and_pos[1]))
+        overallProductionsFound.append(Production(Nonterminal(word_and_pos[1]), [word_and_pos[0]]))
 
     print("All POS found in sentence: " + temp.__str__())
     return temp
@@ -193,11 +195,24 @@ for production in overallProductionsFound:
 
 print("New productions found after adding S: " + overallProductionsFound.__str__())
 
+overallProductionsFound.append(Production(Nonterminal("S"), production.rhs()))
 customCFG = CFG(Nonterminal("S"), overallProductionsFound)
 
 print("Is this in chomsky normal form: ")
 print(customCFG.is_chomsky_normal_form())
 print("That is what we like to see")
+#That is why you fail.
+
+sent = ['No', 'different', 'I', '.']
+parser = nltk.ChartParser(customCFG)
+trees = list(parser.parse(sent))
+print(trees.__str__())
+
+for sentence in quotes:
+    sent = word_tokenize(sentence)
+    parser = nltk.ChartParser(customCFG)
+    trees = list(parser.parse(sent))
+    print(trees[0])
 
 #[4, 11, 17, 31, 39, 52, 57, 61, 65, 69, 73, 77, 80, 84, 90, 91, 104, 108, 119, 123, 133, 139, 142, 147, 154, 157, 158, 163, 166, 167, 168, 173, 177, 180, 181, 184, 196, 202]
 #[2, 4, 11, 17, 31, 39, 52, 57, 61, 65, 69, 73, 77, 80, 84, 90, 91, 104, 108, 119, 123, 133, 139, 142, 147, 154, 157, 158, 163, 166, 167, 168, 173, 177, 180, 181, 184, 196, 202]
