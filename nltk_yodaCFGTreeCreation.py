@@ -20,18 +20,16 @@ def getPOSOfSentence(sentence):
     print("All POS found in sentence: " + temp.__str__())
     return temp
 
-def determineIfNewStartingProductionIsFound(mutatedNonTerminals):
-    print("Here are the nonterminals found after mutation")
-    print(mutatedNonTerminals)
-    isThereANewStart = False
+def determineNonterminalsThatIsChildAndStart(mutatedNonTerminals):
+    global overallStartingAndLeafNonTerminals
+    global overallStartingNonTerminals
 
     if len(mutatedNonTerminals) > 1:
         for mutatedNonTerminal in mutatedNonTerminals:
             for startingNonTerminal in overallStartingNonTerminals:
-                if mutatedNonTerminal == startingNonTerminal:
-                    isThereANewStart = True
-
-    return isThereANewStart
+                if mutatedNonTerminal == startingNonTerminal and overallStartingAndLeafNonTerminals.count(mutatedNonTerminal) == 0:
+                        overallStartingAndLeafNonTerminals.append(startingNonTerminal)
+                        overallStartingNonTerminals.remove(startingNonTerminal)
 
 def mutateListWithAlreadyDeclaredProductions(initalNonTerminals):
     global overallProductionsFound
@@ -161,6 +159,7 @@ quotes = [
 
 posInSentence = []
 overallStartingNonTerminals = []
+overallStartingAndLeafNonTerminals = []
 overallProductionsFound = []
 rollingID = 0
 
@@ -169,18 +168,24 @@ for sentence in quotes:
     posInSentence = getPOSOfSentence(sentence)
     unfoundProductionsForNonTerminals = mutateListWithAlreadyDeclaredProductions(posInSentence)
     print("Displaying unfound nonterminals after mutation process: " + unfoundProductionsForNonTerminals.__str__())
-    # newStartDetected = determineIfNewStartingProductionIsFound(unfoundProductionsForNonTerminals)
+    determineNonterminalsThatIsChildAndStart(unfoundProductionsForNonTerminals)
     performRightToLeftProductionCreation(unfoundProductionsForNonTerminals)
     posInSentence.clear()
     print("Our new starting nonterminals: " + overallStartingNonTerminals.__str__())
+    print("Starting and Leaf nonterminals: " + overallStartingAndLeafNonTerminals.__str__())
     print("Overall productions found thus far: " + overallProductionsFound.__str__())
     print("-------End of Algorithm-------")
 
-for production in overallProductionsFound:
-    for startingNonTerminal in overallStartingNonTerminals:
+for startingNonTerminal in overallStartingNonTerminals:
+    for production in overallProductionsFound:
         if(production.lhs() == startingNonTerminal):
             overallProductionsFound.append(Production(Nonterminal("S"), production.rhs()))
             overallProductionsFound.remove(production)
+
+for startingAndLeadNonTerminal in overallStartingAndLeafNonTerminals:
+    for production in overallProductionsFound:
+        if(production.lhs() == startingAndLeadNonTerminal):
+            overallProductionsFound.append(Production(Nonterminal("S"), production.rhs()))
 
 print("New productions found after adding S: " + overallProductionsFound.__str__())
 
