@@ -79,12 +79,11 @@ def mutateListWithAlreadyDeclaredProductions(initalNonTerminals):
 
     return initalNonTerminals
 
-def performRightToLeftProductionCreation(unfoundNonTerminals, newStartDetected):
+def performRightToLeftProductionCreation(unfoundNonTerminals):
     global rollingID
     global overallProductionsFound
     global overallStartingNonTerminals
 
-    print(newStartDetected)
     index = len(unfoundNonTerminals) - 1
     newNonTerminals = []
     print("-------Starting Left to Right procedure-------")
@@ -119,12 +118,8 @@ def performRightToLeftProductionCreation(unfoundNonTerminals, newStartDetected):
 
     print("Displaying newly created nonterminals: " + newNonTerminals.__str__() + "\n")
     if newNonTerminals.__len__() > 1: # means I havent found an S canidate
-        performRightToLeftProductionCreation(newNonTerminals, newStartDetected)
+        performRightToLeftProductionCreation(newNonTerminals)
     elif newNonTerminals.__len__() != 0:
-        if newStartDetected:
-            print("Since we found a new starting nonterminal, we will need to create a new starting one")
-            overallStartingNonTerminals.clear()
-
         overallStartingNonTerminals.append(newNonTerminals.pop()) # todo make it return "S" on "overallProductionsFound" instead of number
         print("Our new starting nonterminals")
         print(overallStartingNonTerminals)
@@ -181,9 +176,8 @@ print()
 for sentence in quotes:
     posInSentence = getPOSOfSentence(sentence)
     unfoundProductionsForNonTerminals = mutateListWithAlreadyDeclaredProductions(posInSentence)
-    newStartDetected = determineIfNewStartingProductionIsFound(unfoundProductionsForNonTerminals)
-    # todo add method here to check if an S was found and unfoundProductionsForNonTerminals == length of 1. If a S was found and unfoundProductionsForNonTerminals != length of 1, there is a new S
-    performRightToLeftProductionCreation(unfoundProductionsForNonTerminals, newStartDetected)
+    # newStartDetected = determineIfNewStartingProductionIsFound(unfoundProductionsForNonTerminals)
+    performRightToLeftProductionCreation(unfoundProductionsForNonTerminals)
 
     posInSentence.clear()
     print()
@@ -204,3 +198,6 @@ customCFG = CFG(Nonterminal("S"), overallProductionsFound)
 print("Is this in chomsky normal form: ")
 print(customCFG.is_chomsky_normal_form())
 print("That is what we like to see")
+
+#[4, 11, 17, 31, 39, 52, 57, 61, 65, 69, 73, 77, 80, 84, 90, 91, 104, 108, 119, 123, 133, 139, 142, 147, 154, 157, 158, 163, 166, 167, 168, 173, 177, 180, 181, 184, 196, 202]
+#[2, 4, 11, 17, 31, 39, 52, 57, 61, 65, 69, 73, 77, 80, 84, 90, 91, 104, 108, 119, 123, 133, 139, 142, 147, 154, 157, 158, 163, 166, 167, 168, 173, 177, 180, 181, 184, 196, 202]
