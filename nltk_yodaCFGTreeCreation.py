@@ -3,22 +3,20 @@ import nltk
 from nltk.tokenize import word_tokenize
 from nltk import CFG, Production, nonterminals, Nonterminal
 from nltk.parse.generate import generate
-from nltk.help import upenn_tagset
-from collections import OrderedDict
 
 
 def getPOSOfSentence(sentence):
     global overallProductionsFound
     print("Sentence: " + sentence)
-    temp = []
+    sentenceWithPOSTags = []
     for word_and_pos in nltk.pos_tag(word_tokenize(sentence)):  # POS -> Part Of Speech
-        temp.append(Nonterminal(word_and_pos[1]))
+        sentenceWithPOSTags.append(Nonterminal(word_and_pos[1]))
         newTerminal = Production(Nonterminal(word_and_pos[1]), [word_and_pos[0]])
         if overallProductionsFound.count(newTerminal) == 0:
             overallProductionsFound.append(newTerminal)
 
-    print("All POS found in sentence: " + temp.__str__())
-    return temp
+    print("All POS found in sentence: " + sentenceWithPOSTags.__str__())
+    return sentenceWithPOSTags
 
 def determineNonterminalsThatIsChildAndStart(mutatedNonTerminals):
     global overallStartingAndLeafNonTerminals
@@ -28,8 +26,8 @@ def determineNonterminalsThatIsChildAndStart(mutatedNonTerminals):
         for mutatedNonTerminal in mutatedNonTerminals:
             for startingNonTerminal in overallStartingNonTerminals:
                 if mutatedNonTerminal == startingNonTerminal and overallStartingAndLeafNonTerminals.count(mutatedNonTerminal) == 0:
-                        overallStartingAndLeafNonTerminals.append(startingNonTerminal)
-                        overallStartingNonTerminals.remove(startingNonTerminal)
+                    overallStartingAndLeafNonTerminals.append(startingNonTerminal)
+                    overallStartingNonTerminals.remove(startingNonTerminal)
 
 def mutateListWithAlreadyDeclaredProductions(initalNonTerminals):
     global overallProductionsFound
@@ -118,6 +116,7 @@ quotes = [
     "No different I.",
     "Yes, No different I.",
     "Agree with you, the council does.",
+    "Agree with you, the council does.",
     "Your apprentice, Skywalker will be.",
     "Always two there are, no more, no less: a master and an apprentice.",
     "Fear is the path to the Dark Side.",
@@ -189,7 +188,6 @@ for startingAndLeadNonTerminal in overallStartingAndLeafNonTerminals:
 
 print("New productions found after adding S: " + overallProductionsFound.__str__())
 
-overallProductionsFound.append(Production(Nonterminal("S"), production.rhs()))
 customCFG = CFG(Nonterminal("S"), overallProductionsFound)
 
 print("Is this in chomsky normal form: " + customCFG.is_chomsky_normal_form().__str__())
@@ -201,3 +199,10 @@ for sentence in quotes:
     parser = nltk.ChartParser(customCFG)
     trees = list(parser.parse(sent))
     print("Tree: " + trees.__str__())
+
+print("------------------------------------------------------------------------------------------------------------------------")
+count=0
+for sentences in generate(customCFG):
+    if(count%10000000 == 0):
+        print(' '.join(sentences))
+    count+=1
